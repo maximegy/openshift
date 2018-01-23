@@ -25,6 +25,8 @@ sed -i -e "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config
 
 yum install -y epel-release
 
+yum update -y
+
 yum install -y git wget zile nano net-tools docker \
 python-cryptography pyOpenSSL.x86_64 python2-pip \
 openssl-devel python-devel httpd-tools NetworkManager python-passlib \
