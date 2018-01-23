@@ -18,6 +18,11 @@ echo "* Your password is $PASSWORD "
 echo "* OpenShift version: $VERSION "
 echo "******"
 
+systemctl stop firewalld
+systemctl disable firewalld
+setenforce 0
+sed -i -e "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config
+
 yum install -y epel-release
 
 yum install -y git wget zile nano net-tools docker \
