@@ -4,7 +4,7 @@
 
 export DOMAIN=${DOMAIN:="thunder.io"}
 export USERNAME=${USERNAME:="$(whoami)"}
-export PASSWORD=${PASSWORD:=password}
+export PASSWORD=${PASSWORD:=sogeti}
 export VERSION=${VERSION:="v3.7.0"}
 
 export SCRIPT_REPO=${SCRIPT_REPO:="https://raw.githubusercontent.com/gshipley/installcentos/master"}
