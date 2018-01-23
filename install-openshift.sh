@@ -65,7 +65,7 @@ else
 	docker-storage-setup
 fi
 
-echo {"insecure-registries" : ["172.30.0.0/16"]} > /etc/docker/daemon.json
+# echo {"insecure-registries" : ["172.30.0.0/16"]} > /etc/docker/daemon.json
 systemctl restart docker
 systemctl enable docker
 
