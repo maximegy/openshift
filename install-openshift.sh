@@ -3,12 +3,9 @@
 ## see: https://www.youtube.com/watch?v=-OOnGK-XeVY
 
 export DOMAIN=${DOMAIN:="thunder.io"}
-export USERNAME=${USERNAME:="$(whoami)"}
-export PASSWORD=${PASSWORD:=sogeti}
+export USERNAME=${USERNAME:=maxime}
+export PASSWORD=${PASSWORD:=maxime}
 export VERSION=${VERSION:="v3.7.0"}
-
-export SCRIPT_REPO=${SCRIPT_REPO:="https://raw.githubusercontent.com/gshipley/installcentos/master"}
-
 export IP="$(ip route get 8.8.8.8 | awk '{print $NF; exit}')"
 
 echo "******"
@@ -27,7 +24,7 @@ yum install -y epel-release
 
 yum update -y
 
-yum install -y git wget zile nano net-tools docker \
+yum install -y wget zile nano net-tools docker \
 python-cryptography pyOpenSSL.x86_64 python2-pip \
 openssl-devel python-devel httpd-tools NetworkManager python-passlib \
 java-1.8.0-openjdk-headless "@Development Tools"
@@ -43,12 +40,6 @@ which ansible || pip install -Iv ansible
 [ ! -d openshift-ansible ] && git clone https://github.com/openshift/openshift-ansible.git
 
 cd openshift-ansible && git fetch && git checkout release-3.7 && cd ..
-
-cat <<EOD > /etc/hosts
-127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 
-::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
-${IP}		$(hostname) console console.${DOMAIN} 
-EOD
 
 if [ -z $DISK ]; then 
 	echo "Not setting the Docker storage."
@@ -69,11 +60,14 @@ fi
 systemctl restart docker
 systemctl enable docker
 
-if [ ! -f ~/.ssh/id_rsa ]; then
+	yum install -y sshpass
 	ssh-keygen -q -f ~/.ssh/id_rsa -N ""
 	cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-	ssh -o StrictHostKeyChecking=no root@$IP "pwd" < /dev/null
-fi
+	sshpass -p sogeti ssh-copy-id -f -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no root@172.16.1.31
+	sshpass -p sogeti ssh-copy-id -f -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no root@172.16.1.32
+	sshpass -p sogeti ssh-copy-id -f -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no root@172.16.1.33
+	sshpass -p sogeti ssh-copy-id -f -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no root@172.16.1.34
+	sshpass -p sogeti ssh-copy-id -f -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no root@172.16.1.35
 
 export METRICS="True"
 export LOGGING="True"
@@ -88,8 +82,6 @@ if [ "$memory" -lt "8388608" ]; then
 	export LOGGING="False"
 fi
 
-curl -o inventory.download $SCRIPT_REPO/inventory.ini
-envsubst < inventory.download > inventory.ini
 ansible-playbook -i inventory.ini openshift-ansible/playbooks/byo/config.yml
 
 htpasswd -b /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
@@ -98,7 +90,7 @@ oc adm policy add-cluster-role-to-user cluster-admin ${USERNAME}
 systemctl restart origin-master-api
 
 echo "******"
-echo "* Your conosle is https://console.$DOMAIN:8443"
+echo "* Your console is https://console.$DOMAIN:8443"
 echo "* Your username is $USERNAME "
 echo "* Your password is $PASSWORD "
 echo "*"
