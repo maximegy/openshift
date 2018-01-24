@@ -2,7 +2,7 @@
 
 ## see: https://www.youtube.com/watch?v=-OOnGK-XeVY
 
-export DOMAIN=${DOMAIN:="thunder.io"}
+export DOMAIN=${DOMAIN:="openshift.io"}
 export USERNAME=${USERNAME:=maxime}
 export PASSWORD=${PASSWORD:=maxime}
 export VERSION=${VERSION:="v3.7.0"}
@@ -82,7 +82,7 @@ if [ "$memory" -lt "8388608" ]; then
 	export LOGGING="False"
 fi
 
-ansible-playbook -i inventory.ini openshift-ansible/playbooks/byo/config.yml
+ansible-playbook -i ./openshift/inventory.ini openshift-ansible/playbooks/byo/config.yml
 
 htpasswd -b /etc/origin/master/htpasswd ${USERNAME} ${PASSWORD}
 oc adm policy add-cluster-role-to-user cluster-admin ${USERNAME}
