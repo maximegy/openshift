@@ -1,6 +1,14 @@
 #!/bin/bash
 
-## see: https://www.youtube.com/watch?v=-OOnGK-XeVY
+#avant:
+#installer machine centos avec minimum 4 Go de ram et 2 coeur CPU
+#yum update -y
+#hostnamectl set-hostname XXXX
+#reboot
+#yum install git -y
+# git clone https://github.com/maximegy/openshift
+# cd openshift && git checkout solo
+# cd
 
 export DOMAIN=${DOMAIN:="thunder.io"}
 export USERNAME=${USERNAME:="$(whoami)"}
