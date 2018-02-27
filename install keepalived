@@ -17,7 +17,7 @@ global_defs {
 
 vrrp_instance VI_1 {
     state MASTER
-    interface eth1
+    interface ens160
     virtual_router_id 51
     priority 101 #priorité 101 pour le master et 100 pour les autres
     advert_int 1
